@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Challan QR Code Generator</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+    <script>
+      // Check if QRCode library is loaded, if not load from local
+      window.onload = function () {
+        if (typeof QRCode === "undefined") {
+          var script = document.createElement("script");
+          script.src = "path/to/local/qrcode.min.js";
+          document.head.appendChild(script);
+        }
+      };
+    </script>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+        background: #f4f4f9;
+        color: #333;
+      }
+      h2 {
+        color: #444;
+        text-align: center;
+      }
+      form {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+      }
+      .form-group {
+        flex-basis: 23%;
+        margin-bottom: 10px;
+      }
+      label {
+        display: block;
+        margin-bottom: 5px;
+        font-size: 14px;
+      }
+      input[type="text"],
+      button {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+      }
+      button {
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        cursor: pointer;
+        font-size: 16px;
+        margin-top: 20px;
+        transition: background-color 0.3s;
+      }
+      button:hover {
+        background-color: #45a049;
+      }
+      #qrcode {
+        text-align: center;
+        margin-top: 20px;
+        padding: 20px;
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+      @media print {
+        body * {
+          visibility: hidden;
+        }
+        #qrcode,
+        #qrcode * {
+          visibility: visible;
+        }
+        #qrcode {
+          position: absolute;
+          left: 0;
+          top: 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Challan QR Code Generator</h2>
+    <form id="challanForm">
+      <div class="form-group">
+        <label for="challanNo">Challan No. (12)</label>
+        <input type="text" id="challanNo" maxlength="12" />
+      </div>
+      <div class="form-group">
+        <label for="vendorCode">Vendor Code (10)</label>
+        <input type="text" id="vendorCode" maxlength="10" />
+      </div>
+      <div class="form-group">
+        <label for="itemCode">Item Code (10)</label>
+        <input type="text" id="itemCode" maxlength="10" />
+      </div>
+      <div class="form-group">
+        <label for="moNo">MO No. (8)</label>
+        <input type="text" id="moNo" maxlength="8" />
+      </div>
+      <div class="form-group">
+        <label for="poNo">PO No. (8)</label>
+        <input type="text" id="poNo" maxlength="8" />
+      </div>
+      <div class="form-group">
+        <label for="family">Family (4)</label>
+        <input type="text" id="family" maxlength="4" />
+      </div>
+      <div class="form-group">
+        <label for="calNc">Cal/NC (4)</label>
+        <input type="text" id="calNc" maxlength="4" />
+      </div>
+      <div class="form-group">
+        <label for="spMp">SP/MP (2)</label>
+        <input type="text" id="spMp" maxlength="2" />
+      </div>
+      <div class="form-group">
+        <label for="characteristics">Characteristics (2)</label>
+        <input type="text" id="characteristics" maxlength="2" />
+      </div>
+      <div class="form-group">
+        <label for="rating">Rating (4)</label>
+        <input type="text" id="rating" maxlength="4" />
+      </div>
+      <div class="form-group">
+        <label for="special">Special (10)</label>
+        <input type="text" id="special" maxlength="10" />
+      </div>
+      <div class="form-group">
+        <label for="challanQuantity">Challan Quantity (6)</label>
+        <input type="text" id="challanQuantity" maxlength="6" />
+      </div>
+      <button type="button" onclick="generateQR()">Generate QR Code</button>
+    </form>
+    <div id="qrcode"></div>
+    <button onclick="printQR()">Print QR Code</button>
+
+    <script>
+      function generateQR() {
+        var qrData = "";
+        $('#challanForm input[type="text"]').each(function () {
+          var input = $(this);
+          qrData +=
+            input.val() +
+            " ".repeat(parseInt(input.attr("maxlength")) - input.val().length);
+        });
+
+        $("#qrcode").empty();
+        new QRCode(document.getElementById("qrcode"), {
+          text: qrData,
+          width: 256,
+          height: 256,
+          colorDark: "#000000",
+          colorLight: "#ffffff",
+          correctLevel: QRCode.CorrectLevel.H,
+        });
+      }
+
+      function printQR() {
+        window.print();
+      }
+    </script>
+  </body>
+</html>
